@@ -186,3 +186,26 @@ footer nav ul {
 	margin: 2em
 }
 
+/* **** Boutons filtrer **** */
+
+.filtres{
+	width:100%;
+	text-align:center;
+}
+
+.bouton-filtre{
+	text-align:center;
+	padding:5px 20px;
+	margin:30px 15px;
+	border:1px solid #1D6154;
+	border-radius:50px;
+	background-color:white;
+	color:#1D6154;
+}
+
+.bouton-filtre:focus {
+	background-color: #1D6154;
+	color:white
+}
+
+
