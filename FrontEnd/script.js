@@ -36,13 +36,45 @@ function genererFiltres(){
     }
 }
 
+function genererModale(){
+    const modaleImage = document.querySelector(".modal-img")
+    const modaleWrapper = document.querySelector(".modal-wrapper")
+    for (let i=0; i<gallery.length; i++){
+        let galleryElement = document.createElement("div")
+        galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}" class="gallery-element"><i class="fa-solid fa-trash-can"></i>`
+        modaleImage.appendChild(galleryElement)
+    }
+    let boutonAjouter = document.createElement("div")
+    boutonAjouter.innerHTML=`<button name="ajouter-photo">Ajouter une photo</button>`
+    boutonAjouter.classList.add("bouton-ajouter")
+    modaleWrapper.appendChild(boutonAjouter)
+
+}
+
+
+// -----------------Génération de la page---------------------//
 
 genererTravaux(gallery)
 genererFiltres()
+genererModale()
+
+// -----------------Récupération su SessionStorage---------------------//
+if (sessionStorage!==null){
+    const isUser = sessionStorage.getItem("isUser")
+    const user = sessionStorage.getItem("user")
+    
+    if (isUser === "true") {
+        console.log("Utilisateur connecté:", user)
+        
+    } else {
+        console.log("Aucun utilisateur connecté.")
+    }
+}
+
+// -----------------Listener des boutons "filtre"---------------------//
 
 let boutonsFiltres = document.querySelectorAll(".bouton-filtre")
 let boutonsFiltresArray= Array.from(boutonsFiltres)
-
 
 boutonsFiltresArray.forEach(function(bouton){
     bouton.addEventListener("click", function (){  
@@ -54,8 +86,8 @@ boutonsFiltresArray.forEach(function(bouton){
             let nouvelleCategorie = gallery.filter(function(element){
                 return element.category.name === categorieFiltree
             })
-            console.log(nouvelleCategorie)
             genererTravaux(nouvelleCategorie)
         }
     })
 })
+

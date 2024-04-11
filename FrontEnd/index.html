@@ -10,6 +10,7 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script type="module" src="script.js"></script>
+	<script src="https://kit.fontawesome.com/ec40d16e27.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
@@ -18,12 +19,19 @@
 		<ul>
 			<li>projets</li>
 			<li>contact</li>
-			<li>login</li>
+			<li><a href=login.html>Log in</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
 </header>
 <main>
+	<aside class = "modal" style="display:none">
+		<div class="modal-wrapper">
+			<i class="fa-solid fa-xmark"></i>
+			<h3>Galerie Photo</h3>
+			<div class="modal-img"></div>
+		</div>
+	</aside>
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
@@ -37,6 +45,7 @@
 	</section>
 	<section id="portfolio">
 		<h2>Mes Projets</h2>
+		<a href=#><i class="fa-regular fa-pen-to-square"></i> Modifier</a>
 		<div class="filtres">
 			<button name="Tous" class="bouton-filtre">Tous</button>
 		</div>

@@ -84,6 +84,12 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+
+h3{
+	font-size: 26px;
+	font-weight: 400;
+}
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -208,4 +214,85 @@ footer nav ul {
 	color:white
 }
 
+/* **** Modale **** */
 
+.modal {
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	position:fixed;
+	top:0;
+	left:0;
+	width: 100vw;
+	height:100vh;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-wrapper {
+	display:flex;
+	position: relative;
+	flex-direction: column;
+	align-items: center;
+	width:650px;
+	max-width: calc(100vw - 20px);
+	max-height: calc(100vh - 20px);
+	background-color: white;
+	border-radius: 10px;
+	padding-top:60px;
+	padding-bottom:45px;
+}
+
+.fa-xmark {
+	position:absolute;
+	right:30px;
+	top:25px;
+	font-size: 24px;
+}
+
+.modal-img {
+	display:flex;
+	flex-wrap: wrap;
+	margin:50px 105px;
+	padding-bottom: 70px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.modal-img div{
+	position: relative;
+	width:77px;
+	margin:5px;
+}
+
+.modal-img img {
+	width:100%;
+}
+
+.fa-trash-can {
+	position:absolute;
+	top:7px;
+	right:5px;
+	background-color: black;
+	color:white;
+	text-align: center;
+	font-weight:light;
+	font-size: 13px;
+	width:13px;
+	height:13px;
+	padding:4px;
+	border-radius: 4px;
+}
+
+.bouton-ajouter{
+	width:40%;
+}
+
+.modal-wrapper button{
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 14px;
+	color: white;
+	background-color: #1D6154;
+	padding:10px 50px;
+	text-align: center;
+	border-radius: 60px ;
+}
