@@ -75,7 +75,6 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
@@ -104,6 +103,32 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+a {
+	text-decoration: none;
+	color:black;
+}
+
+form {
+	text-align: left;
+	margin-top:30px;
+	display: flex;
+	flex-direction: column;
+}
+
+input, select {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+label {
+	margin: 2em 0 1em 0;
+}
+
+/* ******** introduction ********** */
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -127,10 +152,34 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
-#portfolio h2 {
+
+/* ******** Portfolio ********** */
+
+#portfolio-title {
+	width:100%;
 	text-align: center;
-	margin-bottom: 1em;
 }
+
+#portfolio h2 {
+	display:inline-block;
+	margin-bottom: 1em;
+	margin-right:30px;
+}
+
+#portfolio-title i {
+	margin-right:5px;
+}
+
+#portfolio-title button {
+	border:none;
+	background-color: white;
+	cursor:pointer;
+}
+
+.invisible {
+	display:none
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -142,54 +191,6 @@ li:hover {
 .gallery img {
 	width: 100%;
 
-}
-#contact {
-	width: 50%;
-margin: auto;
-}
-#contact > * {
-	text-align: center;
-
-}
-#contact h2{
-	margin-bottom: 20px;
-}
-#contact form {
-	text-align: left;
-	margin-top:30px;
-	display: flex;
-	flex-direction: column;
-}
-
-#contact input {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-#contact label {
-	margin: 2em 0 1em 0;
-}
-#contact textarea {
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-input[type="submit"]{
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
-}
-
-footer nav ul {
-	display: flex;
-	justify-content: flex-end;
-	margin: 2em
 }
 
 /* **** Boutons filtrer **** */
@@ -213,6 +214,50 @@ footer nav ul {
 	background-color: #1D6154;
 	color:white
 }
+
+
+/* ******** Contact ********** */
+
+#contact {
+	width: 50%;
+margin: auto;
+}
+#contact > * {
+	text-align: center;
+
+}
+#contact h2{
+	margin-bottom: 20px;
+}
+
+
+#contact textarea {
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+input[type="submit"]{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+}
+
+/* ******** footer ********** */
+
+footer nav ul {
+	display: flex;
+	justify-content: flex-end;
+	margin: 2em
+}
+
+
+
+
 
 /* **** Modale **** */
 
@@ -238,15 +283,20 @@ footer nav ul {
 	max-height: calc(100vh - 20px);
 	background-color: white;
 	border-radius: 10px;
-	padding-top:60px;
 	padding-bottom:45px;
 }
 
-.fa-xmark {
-	position:absolute;
-	right:30px;
-	top:25px;
+.modal-wrapper nav {
+	display:flex;
+	justify-content: space-between;
+	flex-direction: row-reverse;
+	width:100%;
 	font-size: 24px;
+}
+
+.modal-wrapper nav i{
+	margin:30px;
+	cursor: pointer;
 }
 
 .modal-img {
@@ -280,6 +330,7 @@ footer nav ul {
 	height:13px;
 	padding:4px;
 	border-radius: 4px;
+	cursor: pointer;
 }
 
 .bouton-ajouter{
@@ -295,4 +346,59 @@ footer nav ul {
 	padding:10px 50px;
 	text-align: center;
 	border-radius: 60px ;
+	cursor: pointer;
+}
+
+.modal-wrapper button[type=submit] {
+	margin-top:30px;
+}
+
+/* **** Modale Form **** */
+
+.ajouter-form {
+	display:flex;
+	flex-direction: column;
+	width:66%;
+	padding-bottom: 70px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+
+
+option, select {
+	font-size:14px;
+	font-weight:400px;
+}
+
+.section-photo {
+	text-align: center;
+	width:100%;
+	background-color: #E8F1F6;
+	border-radius: 3px;
+	margin-top:40px;
+}
+
+.section-photo i{
+	font-size:76px;
+	color:#B9C5CC;
+}
+
+.section-photo input[type=file] {
+	display:none;
+}
+
+.section-photo label {
+	background-color: #B9C5CC;
+	padding:10px 33px;
+	border-radius: 50px;
+	cursor:pointer;
+	font-size: 14px;
+	font-weight:500;
+	color:#306685;
+}
+
+.section-photo p{
+	font-size:10px;
+	font-weight: 400;
+	margin:20px;
 }
