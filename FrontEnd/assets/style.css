@@ -176,8 +176,12 @@ label {
 	cursor:pointer;
 }
 
-.invisible {
+.display-none {
 	display:none
+}
+
+.invisible {
+	opacity:0;
 }
 
 .gallery {
@@ -363,8 +367,6 @@ footer nav ul {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 }
 
-
-
 option, select {
 	font-size:14px;
 	font-weight:400px;
@@ -373,6 +375,7 @@ option, select {
 .section-photo {
 	text-align: center;
 	width:100%;
+	height:170px;
 	background-color: #E8F1F6;
 	border-radius: 3px;
 	margin-top:40px;
@@ -381,10 +384,12 @@ option, select {
 .section-photo i{
 	font-size:76px;
 	color:#B9C5CC;
+	margin:20px;
 }
 
 .section-photo input[type=file] {
-	display:none;
+	opacity:0;
+	width:1px;
 }
 
 .section-photo label {
@@ -397,8 +402,18 @@ option, select {
 	color:#306685;
 }
 
+.invisible label {
+	cursor:default;
+}
+
+.display img {
+	height:170px;
+}
+
 .section-photo p{
+	position:relative;	
+	top:-15px;
 	font-size:10px;
 	font-weight: 400;
-	margin:20px;
+	
 }
