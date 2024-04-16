@@ -1,43 +1,41 @@
+// -----------------Fonction Connexion---------------------//
+async function connexion(identifiants){
 
-
-async function recupererDonnees(identifiants){
-
-    const chargeUtile = JSON.stringify(identifiants);
-    
-    await fetch("http://localhost:5678/api/users/login", {
-        method:"POST",
-        headers:{"Content-Type": "application/json"},
-        body: chargeUtile
-    })
-    
-    .then(response => {
+    try{
+        const chargeUtile = JSON.stringify(identifiants);
         
-        if (response.ok) {
-            return response.json()  
-        }else{
-            alert("Mot de passe ou Email non valide")
-            throw new Error('Mot de passe ou email non valide')
-        }
-    })
-    
-    .then (data => {
-        sessionStorage.setItem("user",identifiants.email)
-        sessionStorage.setItem("isUser", "true")
-        sessionStorage.setItem("token",data.token)
-        window.location.href = "index.html"
-    })
-    
-    .catch(error => {
-        console.error('Erreur lors de la requête:', error)
-    });
-
+        await fetch("http://localhost:5678/api/users/login", {
+            method:"POST",
+            headers:{"Content-Type": "application/json"},
+            body: chargeUtile
+        })
+        
+        .then(response => {
+            
+            if (response.ok) {
+                return response.json()  
+            }else{
+                alert("Erreur dans l'identifiant ou le mot de passe")
+                throw new Error("Erreur dans l'identifiant ou le mot de passe")
+            }
+        })
+        
+        .then (data => {
+            sessionStorage.setItem("user",identifiants.email)
+            sessionStorage.setItem("isUser", "true")
+            sessionStorage.setItem("token",data.token)
+            window.location.href = "index.html"
+        })
+    }catch(error){
+        console.log(error)
+    }
 }
 
-
+// -----------------Listener du bouton "Connexion"---------------------//
 let storedData=''
-const login = document.querySelector(".login")
+const loginForm = document.querySelector(".login")
 
-login.addEventListener("submit", function(event){
+loginForm.addEventListener("submit", function(event){
     
     event.preventDefault();
     const identifiants = {
@@ -45,6 +43,6 @@ login.addEventListener("submit", function(event){
         password: event.target.querySelector("[name=password]").value
     }
 
-    recupererDonnees(identifiants)
+    connexion(identifiants)
 })
    
