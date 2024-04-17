@@ -13,8 +13,8 @@ const gallery = await galleryData.json()
 
 
 const galleryContainer = document.querySelector(".gallery")
-const modifierButton = document.getElementById("bouton-modifier")
-const filters = document.querySelector(".filtres")
+const modifierButton = document.getElementById("modifier-button")
+const filters = document.querySelector(".filters")
 const modal = document.querySelector(".modal")
 const modalWrapper = document.querySelector(".modal-wrapper")
 
@@ -48,13 +48,8 @@ function createFilters(){
 
  // -----------------Génération de la modale "Supprimer travaux"---------------------//
 
-
 function fillDeleteModal(){
-
-    // Nettoyage du contenu de la modale
-    modalWrapper.innerHTML=``
-
-    // --- Création de chaque élément ---//
+// --- Création de chaque élément ---//
     // Création des liens de navigation 
     let nav = document.createElement("nav")
     nav.innerHTML=`<div><i class="fa-solid fa-xmark"></i></div>`
@@ -82,17 +77,24 @@ function fillDeleteModal(){
 
     // Ajout du bouton Ajouter une photo
     let addButton = document.createElement("div")
-    addButton.innerHTML=`<button type="button" name="ajouter-photo" id="ajouter-photo">Ajouter une photo</button>`
-    addButton.classList.add("bouton-ajouter")
+    addButton.innerHTML=`<button type="button" name="add-photo" id="add-photo">Ajouter une photo</button>`
+    addButton.classList.add("add-button")
 
     modalWrapper.appendChild(addButton)
-    
+}
 
+function displayDeleteModal(){
+
+    // Nettoyage du contenu de la modale
+    modalWrapper.innerHTML=``
+
+    fillDeleteModal()
+    
     // --- Ajout des Listeners ---//
 
     const closeModal = document.querySelector(".fa-xmark")
     const deleteButton = document.querySelectorAll(".fa-trash-can")
-    const addWorkButton = document.getElementById("ajouter-photo")
+    const addWorkButton = document.getElementById("add-photo")
 
     // Fermer la modale
     closeModal.addEventListener("click", function(){
@@ -100,9 +102,7 @@ function fillDeleteModal(){
     })
 
     modal.addEventListener("click", function(e){
-        if (e.target===modalWrapper || modalWrapper.contains(e.target)){
-            return;
-        }else{
+        if (e.target === modal){
             modal.setAttribute("style","display:none")
         }
     })
@@ -110,16 +110,16 @@ function fillDeleteModal(){
     // Ajouter une photo
     addWorkButton.addEventListener("click", function(e){
         e.preventDefault()
-        fillAddModal()
+        displayAddModal()
     })
 
     // Supprimer un travail
     deleteButton.forEach(function(button){
         const token = "Bearer " + sessionStorage.getItem("token")
-        button.addEventListener("click", function(e){
+        button.addEventListener("click", async function(e){
             let deleteId = e.target.id
             
-            fetch(`http://localhost:5678/api/works/${deleteId}`,{
+            await fetch(`http://localhost:5678/api/works/${deleteId}`,{
                 method:"DELETE",
                 headers:{"authorization" : token}
             })
@@ -131,11 +131,6 @@ function fillDeleteModal(){
 // -----------------Génération de la modale "Ajouter travaux"---------------------//
 
 function fillAddModal(){
-
-    // ----Vider la modale---//
-
-    modalWrapper.innerHTML=''
-
     // ----- Création des éléments de navigation-----//
 
     let nav = document.createElement("nav")
@@ -150,13 +145,13 @@ function fillAddModal(){
 
     // Formulaire
     let form = document.createElement("form")
-    form.classList.add("ajouter-form")
+    form.classList.add("add-form")
 
     // ----Création de l'input file---//
 
     // Division qui contiendra l'input File et le placeHolder
     let photoSection = document.createElement("div")
-    photoSection.classList.add("section-photo")
+    photoSection.classList.add("photo-section")
 
     // Division qui contiendra le placeHolder
     let display = document.createElement("div")
@@ -176,7 +171,8 @@ function fillAddModal(){
     inputFile.setAttribute("name","image")
     inputFile.setAttribute("type","file")
     inputFile.setAttribute("accept","image/png, image/jpeg")
-    inputFile.setAttribute("id","input-photo")
+    inputFile.setAttribute("id","photo-input")
+    inputFile.setAttribute("required","true")
 
     let info = document.createElement("p")
     info.textContent="jpg, png : 4mo max"
@@ -192,22 +188,31 @@ function fillAddModal(){
 
     let titleLabel = document.createElement("label")
     titleLabel.textContent="Titre"
-    titleLabel.setAttribute("for","input-titre")
-    
+    titleLabel.setAttribute("for","title-input")
+
     let titleInput = document.createElement("input")
     titleInput.setAttribute("name","title")
     titleInput.setAttribute("type","text")
-    titleInput.setAttribute("id","input-titre")
+    titleInput.setAttribute("id","title-input")
+    titleInput.setAttribute("required","true")
 
     // --- Création du select Catégorie---//
 
     let categoryLabel = document.createElement("label")
     categoryLabel.textContent="Catégorie"
-    categoryLabel.setAttribute("for","select-categorie")
+    categoryLabel.setAttribute("for","categorie-select")
 
     let categorySelect = document.createElement("select")
     categorySelect.setAttribute("name","category")
-    categorySelect.setAttribute("id","select-categorie")
+    categorySelect.setAttribute("id","categorie-select")
+    categorySelect.setAttribute("required","true")
+
+    let placeHolderSelect = document.createElement("option")
+    placeHolderSelect.setAttribute("value","")
+    placeHolderSelect.setAttribute("selected","true")
+    placeHolderSelect.setAttribute("disabled","true")
+    categorySelect.appendChild(placeHolderSelect)
+
 
     // Génération dynamique des catégories existantes
     for (let i=0; i<categories.length; i++){
@@ -222,7 +227,7 @@ function fillAddModal(){
     let addSubmitButton = document.createElement("button")
     addSubmitButton.setAttribute("type","submit")
     addSubmitButton.textContent="Valider"
-    
+
     // --- Ajout de chaque élément au formulaire---//
 
     form.appendChild(photoSection)
@@ -231,18 +236,29 @@ function fillAddModal(){
     form.appendChild(categoryLabel)
     form.appendChild(categorySelect)
     form.appendChild(addSubmitButton)
-    
+
     // --- Remplissage de la modale---//
     modalWrapper.appendChild(nav)
     modalWrapper.appendChild(title)
     modalWrapper.appendChild(form)
 
+}
+
+function displayAddModal(){
+
+    // ----Vider la modale---//
+
+    modalWrapper.innerHTML=''
+
+    fillAddModal()
+
+    
     // --- Création des Listeners---//
 
     // Retour à la modale de suppression de travaux
     const previous = document.querySelector(".fa-arrow-left")
     previous.addEventListener("click", function(){
-        fillDeleteModal()
+        displayDeleteModal()
     })
 
     // Fermeture de la modale
@@ -252,34 +268,55 @@ function fillAddModal(){
     })
 
     // Affichage du document sélectionné dans l'input File
-    const photoInput = document.getElementById("input-photo")
-    photoInput.addEventListener("change",updateDisplay)
+    const photoInput = document.getElementById("photo-input")
+    photoInput.addEventListener("change",checkFileSize)
 
 
     // -----------------Listener du formulaire d'ajout de travaux---------------------//
 
-    let addForm = document.querySelector(".ajouter-form")
+    let addForm = document.querySelector(".add-form")
 
-    addForm.addEventListener("submit", function(event){
+    addForm.addEventListener("submit", async function(event){
         
         event.preventDefault();
         const addFormData = new FormData(addForm)
         const token = "Bearer " + sessionStorage.getItem("token")
         
-        fetch ("http://localhost:5678/api/works", {
-            method:"POST",
-            body:addFormData,
-            headers: {"Authorization": token}
-        })
+        try {
+            await fetch ("http://localhost:5678/api/works", {
+                method:"POST",
+                body:addFormData,
+                headers: {"Authorization": token}
+            })
+        }catch (error){
+            alert("Une erreur est survenue. Vérifiez les informations entrées et votre connexion internet.")
+            console.log(error)
+        }
     })
 }
 
 // --- Mise à jour de la visualisation de document sélectionné ---//
 
-function updateDisplay() {
+function checkFileSize() {
+    let selectedFile=document.getElementById("photo-input").files
+
+    if (selectedFile.length > 0) {
+        var fileSize = selectedFile[0].size; 
+        console.log(fileSize)
+        var maxSizeInBytes = 4200000;
+
+        if (fileSize > maxSizeInBytes) {
+            alert("La taille du fichier dépasse la limite autorisée.");
+            selectedFile.value = ''; 
+        }else{
+            updateDisplay(selectedFile)
+        }
+    }
+}
+
+function updateDisplay(selectedFile) {
     let inputContainer = document.querySelector(".input-container")
     let imagePlaceholder = document.querySelector(".display")
-    let selectedFile = document.getElementById("input-photo").files
 
     //Si un document a été sélectionné
     if (selectedFile.length !== 0) {
@@ -330,7 +367,7 @@ if (sessionStorage!==null){
 
 // -----------------Listener des boutons "filtre"---------------------//
 
-let filtersButton = document.querySelectorAll(".bouton-filtre")
+let filtersButton = document.querySelectorAll(".filter-button")
 let filtersButtonArray= Array.from(filtersButton)
 
 // Pour chaque filtre
@@ -356,7 +393,7 @@ filtersButtonArray.forEach(function(button){
 // -----------------Listener du bouton "Modifier"---------------------//
 
 modifierButton.addEventListener("click", function(){
-    fillDeleteModal()
+    displayDeleteModal()
     modal.removeAttribute("style")
 })
 

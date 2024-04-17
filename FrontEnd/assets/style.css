@@ -127,6 +127,14 @@ label {
 	margin: 2em 0 1em 0;
 }
 
+.display-none {
+	display:none
+}
+
+.invisible {
+	opacity:0;
+}
+
 /* ******** introduction ********** */
 
 #introduction {
@@ -176,14 +184,6 @@ label {
 	cursor:pointer;
 }
 
-.display-none {
-	display:none
-}
-
-.invisible {
-	opacity:0;
-}
-
 .gallery {
 	width: 100%;
 	display: grid;
@@ -199,12 +199,12 @@ label {
 
 /* **** Boutons filtrer **** */
 
-.filtres{
+.filters{
 	width:100%;
 	text-align:center;
 }
 
-.bouton-filtre{
+.filter-button{
 	text-align:center;
 	padding:5px 20px;
 	margin:30px 15px;
@@ -214,7 +214,7 @@ label {
 	color:#1D6154;
 }
 
-.bouton-filtre:focus {
+.filter-button:focus {
 	background-color: #1D6154;
 	color:white
 }
@@ -337,7 +337,7 @@ footer nav ul {
 	cursor: pointer;
 }
 
-.bouton-ajouter{
+.add-button{
 	width:40%;
 }
 
@@ -359,7 +359,7 @@ footer nav ul {
 
 /* **** Modale Form **** */
 
-.ajouter-form {
+.add-form {
 	display:flex;
 	flex-direction: column;
 	width:66%;
@@ -372,7 +372,7 @@ option, select {
 	font-weight:400px;
 }
 
-.section-photo {
+.photo-section {
 	text-align: center;
 	width:100%;
 	height:170px;
@@ -381,18 +381,18 @@ option, select {
 	margin-top:40px;
 }
 
-.section-photo i{
+.photo-section i{
 	font-size:76px;
 	color:#B9C5CC;
 	margin:20px;
 }
 
-.section-photo input[type=file] {
+.photo-section input[type=file] {
 	opacity:0;
 	width:1px;
 }
 
-.section-photo label {
+.photo-section label {
 	background-color: #B9C5CC;
 	padding:10px 33px;
 	border-radius: 50px;
@@ -410,7 +410,7 @@ option, select {
 	height:170px;
 }
 
-.section-photo p{
+.photo-section p{
 	position:relative;	
 	top:-15px;
 	font-size:10px;
