@@ -1,29 +1,29 @@
  // -----------------Récupérer la galerie enregistrée sur l'API---------------------//
 
-const galleryBDD = await fetch("http://localhost:5678/api/works")
-const gallery = await galleryBDD.json()
+const galleryData = await fetch("http://localhost:5678/api/works")
+const gallery = await galleryData.json()
 
  // -----------------Listing des catégories---------------------//
 
- const categoriesBDD = await fetch("http://localhost:5678/api/categories")
- const categories = await categoriesBDD.json()
+ const categoriesData = await fetch("http://localhost:5678/api/categories")
+ const categories = await categoriesData.json()
   
 
  // -----------------Définition des variables à récupérer dans le DOM---------------------//
 
 
 const galleryContainer = document.querySelector(".gallery")
-const boutonModifier = document.getElementById("bouton-modifier")
-const filtres = document.querySelector(".filtres")
-const modale = document.querySelector(".modal")
-const modaleWrapper = document.querySelector(".modal-wrapper")
+const modifierButton = document.getElementById("bouton-modifier")
+const filters = document.querySelector(".filtres")
+const modal = document.querySelector(".modal")
+const modalWrapper = document.querySelector(".modal-wrapper")
 
 
 
  // -----------------Définition des fonctions---------------------//
   // -----------------Génération des travaux enregistrés-------------------//
 
-function genererTravaux(gallery){
+function fillWorks(gallery){
 
     for (let i=0; i<gallery.length; i++){
         let galleryElement = document.createElement("figure")
@@ -34,24 +34,25 @@ function genererTravaux(gallery){
 
  // -----------------Génération des filtres---------------------//
 
-function genererFiltres(){
+function createFilters(){
 
     for (let i=0; i<categories.length; i++){
-        let filtreElement = document.createElement("button")
-        filtreElement.setAttribute("name",categories[i].name)
-        filtreElement.classList += "bouton-filtre"
-        filtreElement.textContent=categories[i].name
-        filtres.appendChild(filtreElement)
+        let filterElement = document.createElement("button")
+        filterElement.setAttribute("name",categories[i].name)
+        filterElement.setAttribute("type","button")
+        filterElement.classList += "bouton-filtre"
+        filterElement.textContent=categories[i].name
+        filters.appendChild(filterElement)
     }
 }
 
  // -----------------Génération de la modale "Supprimer travaux"---------------------//
 
 
-function genererModaleSupprimer(){
+function fillDeleteModal(){
 
     // Nettoyage du contenu de la modale
-    modaleWrapper.innerHTML=``
+    modalWrapper.innerHTML=``
 
     // --- Création de chaque élément ---//
     // Création des liens de navigation 
@@ -63,61 +64,62 @@ function genererModaleSupprimer(){
     title.textContent="Galerie photo"
 
     // Création du conteneur d'images
-    let modaleImageWrapper = document.createElement("div")
-    modaleImageWrapper.classList.add("modal-img")
+    let modalImageWrapper = document.createElement("div")
+    modalImageWrapper.classList.add("modal-img")
 
     // Ajout des éléments au conteneur de la modale
-    modaleWrapper.appendChild(nav)
-    modaleWrapper.appendChild(title)
-    modaleWrapper.appendChild(modaleImageWrapper)
+    modalWrapper.appendChild(nav)
+    modalWrapper.appendChild(title)
+    modalWrapper.appendChild(modalImageWrapper)
 
     // Ajout des images au conteneur d'images
-    const modaleImage = document.querySelector(".modal-img")
+    const modalImage = document.querySelector(".modal-img")
     for (let i=0; i<gallery.length; i++){
         let galleryElement = document.createElement("div")
         galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}" class="gallery-element"><i class="fa-solid fa-trash-can" id=${gallery[i].id}></i>`
-        modaleImage.appendChild(galleryElement)
+        modalImage.appendChild(galleryElement)
     }
 
     // Ajout du bouton Ajouter une photo
-    let boutonAjouter = document.createElement("div")
-    boutonAjouter.innerHTML=`<button name="ajouter-photo" id="ajouter-photo">Ajouter une photo</button>`
-    boutonAjouter.classList.add("bouton-ajouter")
+    let addButton = document.createElement("div")
+    addButton.innerHTML=`<button type="button" name="ajouter-photo" id="ajouter-photo">Ajouter une photo</button>`
+    addButton.classList.add("bouton-ajouter")
 
-    modaleWrapper.appendChild(boutonAjouter)
-
+    modalWrapper.appendChild(addButton)
+    
 
     // --- Ajout des Listeners ---//
 
     const closeModal = document.querySelector(".fa-xmark")
-    const boutonSupprimer = document.querySelectorAll(".fa-trash-can")
-    const boutonAjouterPhoto = document.getElementById("ajouter-photo")
+    const deleteButton = document.querySelectorAll(".fa-trash-can")
+    const addWorkButton = document.getElementById("ajouter-photo")
 
     // Fermer la modale
     closeModal.addEventListener("click", function(){
-        modale.setAttribute("style","display:none")
+        modal.setAttribute("style","display:none")
     })
 
-    modale.addEventListener("click", function(e){
-        if (e.target===modaleWrapper || modaleWrapper.contains(e.target)){
+    modal.addEventListener("click", function(e){
+        if (e.target===modalWrapper || modalWrapper.contains(e.target)){
             return;
         }else{
-            modale.setAttribute("style","display:none")
+            modal.setAttribute("style","display:none")
         }
     })
 
     // Ajouter une photo
-    boutonAjouterPhoto.addEventListener("click", function(){
-        genererModaleAjouter()
+    addWorkButton.addEventListener("click", function(e){
+        e.preventDefault()
+        fillAddModal()
     })
 
     // Supprimer un travail
-    boutonSupprimer.forEach(function(bouton){
+    deleteButton.forEach(function(button){
         const token = "Bearer " + sessionStorage.getItem("token")
-        bouton.addEventListener("click", function(e){
-            let supprimerId = e.target.id
+        button.addEventListener("click", function(e){
+            let deleteId = e.target.id
             
-            fetch(`http://localhost:5678/api/works/${supprimerId}`,{
+            fetch(`http://localhost:5678/api/works/${deleteId}`,{
                 method:"DELETE",
                 headers:{"authorization" : token}
             })
@@ -128,11 +130,11 @@ function genererModaleSupprimer(){
 
 // -----------------Génération de la modale "Ajouter travaux"---------------------//
 
-function genererModaleAjouter(){
+function fillAddModal(){
 
     // ----Vider la modale---//
 
-    modaleWrapper.innerHTML=''
+    modalWrapper.innerHTML=''
 
     // ----- Création des éléments de navigation-----//
 
@@ -153,8 +155,8 @@ function genererModaleAjouter(){
     // ----Création de l'input file---//
 
     // Division qui contiendra l'input File et le placeHolder
-    let sectionPhoto = document.createElement("div")
-    sectionPhoto.classList.add("section-photo")
+    let photoSection = document.createElement("div")
+    photoSection.classList.add("section-photo")
 
     // Division qui contiendra le placeHolder
     let display = document.createElement("div")
@@ -180,93 +182,93 @@ function genererModaleAjouter(){
     info.textContent="jpg, png : 4mo max"
 
     // Ajout des différents éléments à la section parente
-    sectionPhoto.appendChild(display)
+    photoSection.appendChild(display)
     labelFile.appendChild(inputFile)
     inputContainer.appendChild(labelFile)
     inputContainer.appendChild(info)
-    sectionPhoto.appendChild(inputContainer)
+    photoSection.appendChild(inputContainer)
 
     // --- Création de l'input Titre---//
 
-    let labelTitre = document.createElement("label")
-    labelTitre.textContent="Titre"
-    labelTitre.setAttribute("for","input-titre")
+    let titleLabel = document.createElement("label")
+    titleLabel.textContent="Titre"
+    titleLabel.setAttribute("for","input-titre")
     
-    let inputTitre = document.createElement("input")
-    inputTitre.setAttribute("name","title")
-    inputTitre.setAttribute("type","text")
-    inputTitre.setAttribute("id","input-titre")
+    let titleInput = document.createElement("input")
+    titleInput.setAttribute("name","title")
+    titleInput.setAttribute("type","text")
+    titleInput.setAttribute("id","input-titre")
 
     // --- Création du select Catégorie---//
 
-    let labelCategorie = document.createElement("label")
-    labelCategorie.textContent="Catégorie"
-    labelCategorie.setAttribute("for","select-categorie")
+    let categoryLabel = document.createElement("label")
+    categoryLabel.textContent="Catégorie"
+    categoryLabel.setAttribute("for","select-categorie")
 
-    let selectCategorie = document.createElement("select")
-    selectCategorie.setAttribute("name","category")
-    selectCategorie.setAttribute("id","select-categorie")
+    let categorySelect = document.createElement("select")
+    categorySelect.setAttribute("name","category")
+    categorySelect.setAttribute("id","select-categorie")
 
     // Génération dynamique des catégories existantes
     for (let i=0; i<categories.length; i++){
-        let optionCategory = document.createElement("option")
-        optionCategory.setAttribute("value",categories[i].id)
-        optionCategory.textContent=categories[i].name
-        selectCategorie.appendChild(optionCategory)
+        let categoryOption = document.createElement("option")
+        categoryOption.setAttribute("value",categories[i].id)
+        categoryOption.textContent=categories[i].name
+        categorySelect.appendChild(categoryOption)
     }
 
     // --- Création du bouton Submit---//
 
-    let boutonValiderAjout = document.createElement("button")
-    boutonValiderAjout.setAttribute("type","submit")
-    boutonValiderAjout.textContent="Valider"
+    let addSubmitButton = document.createElement("button")
+    addSubmitButton.setAttribute("type","submit")
+    addSubmitButton.textContent="Valider"
     
     // --- Ajout de chaque élément au formulaire---//
 
-    form.appendChild(sectionPhoto)
-    form.appendChild(labelTitre)
-    form.appendChild(inputTitre)
-    form.appendChild(labelCategorie)
-    form.appendChild(selectCategorie)
-    form.appendChild(boutonValiderAjout)
+    form.appendChild(photoSection)
+    form.appendChild(titleLabel)
+    form.appendChild(titleInput)
+    form.appendChild(categoryLabel)
+    form.appendChild(categorySelect)
+    form.appendChild(addSubmitButton)
     
     // --- Remplissage de la modale---//
-    modaleWrapper.appendChild(nav)
-    modaleWrapper.appendChild(title)
-    modaleWrapper.appendChild(form)
+    modalWrapper.appendChild(nav)
+    modalWrapper.appendChild(title)
+    modalWrapper.appendChild(form)
 
     // --- Création des Listeners---//
 
     // Retour à la modale de suppression de travaux
     const previous = document.querySelector(".fa-arrow-left")
     previous.addEventListener("click", function(){
-        genererModaleSupprimer()
+        fillDeleteModal()
     })
 
     // Fermeture de la modale
     const closeModal = document.querySelector(".fa-xmark")
     closeModal.addEventListener("click", function(){
-        modale.setAttribute("style","display:none")
+        modal.setAttribute("style","display:none")
     })
 
     // Affichage du document sélectionné dans l'input File
-    const inputPhoto = document.getElementById("input-photo")
-    inputPhoto.addEventListener("change",updateDisplay)
+    const photoInput = document.getElementById("input-photo")
+    photoInput.addEventListener("change",updateDisplay)
 
 
     // -----------------Listener du formulaire d'ajout de travaux---------------------//
 
-    let ajouterForm = document.querySelector(".ajouter-form")
+    let addForm = document.querySelector(".ajouter-form")
 
-    ajouterForm.addEventListener("submit", function(event){
+    addForm.addEventListener("submit", function(event){
         
         event.preventDefault();
-        const ajouterFormData = new FormData(ajouterForm)
+        const addFormData = new FormData(addForm)
         const token = "Bearer " + sessionStorage.getItem("token")
         
         fetch ("http://localhost:5678/api/works", {
             method:"POST",
-            body:ajouterFormData,
+            body:addFormData,
             headers: {"Authorization": token}
         })
     })
@@ -301,8 +303,8 @@ function updateDisplay() {
 
 // -----------------Génération de la page---------------------//
 
-genererTravaux(gallery)
-genererFiltres()
+fillWorks(gallery)
+createFilters()
 
 // -----------------Récupération du SessionStorage---------------------//
 if (sessionStorage!==null){
@@ -313,14 +315,14 @@ if (sessionStorage!==null){
     
     if (isUser === "true") {
 
-        boutonModifier.classList.remove("display-none")
-        filtres.classList.add("display-none")
+        modifierButton.classList.remove("display-none")
+        filters.classList.add("display-none")
         console.log("Utilisateur connecté:", user)
 
     } else {
 
-        boutonModifier.classList.add("display-none")
-        filtres.classList.remove("display-none")
+        modifierButton.classList.add("display-none")
+        filters.classList.remove("display-none")
         console.log("Aucun utilisateur connecté.")
     }
 
@@ -328,33 +330,33 @@ if (sessionStorage!==null){
 
 // -----------------Listener des boutons "filtre"---------------------//
 
-let boutonsFiltres = document.querySelectorAll(".bouton-filtre")
-let boutonsFiltresArray= Array.from(boutonsFiltres)
+let filtersButton = document.querySelectorAll(".bouton-filtre")
+let filtersButtonArray= Array.from(filtersButton)
 
 // Pour chaque filtre
-boutonsFiltresArray.forEach(function(bouton){
-    bouton.addEventListener("click", function (){  
+filtersButtonArray.forEach(function(button){
+    button.addEventListener("click", function (){  
 
         // Nettoyer la galerie
         galleryContainer.textContent=""
-        let categorieFiltree = bouton.name
+        let filteredCategory = button.name
 
         // Générer les travaux en fonction de leur catégorie
-        if (bouton.name === "Tous"){
-            genererTravaux(gallery)
+        if (button.name === "Tous"){
+            fillWorks(gallery)
         }else{
-            let nouvelleCategorie = gallery.filter(function(element){
-                return element.category.name === categorieFiltree
+            let newCategory = gallery.filter(function(element){
+                return element.category.name === filteredCategory
             })
-            genererTravaux(nouvelleCategorie)
+            fillWorks(newCategory)
         }
     })
 })
 
 // -----------------Listener du bouton "Modifier"---------------------//
 
-boutonModifier.addEventListener("click", function(){
-    genererModaleSupprimer()
-    modale.removeAttribute("style")
+modifierButton.addEventListener("click", function(){
+    fillDeleteModal()
+    modal.removeAttribute("style")
 })
 
