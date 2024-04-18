@@ -1,7 +1,7 @@
  // -----------------Récupérer la galerie enregistrée sur l'API---------------------//
 
 const galleryData = await fetch("http://localhost:5678/api/works")
-const gallery = await galleryData.json()
+let gallery = await galleryData.json()
 
  // -----------------Listing des catégories---------------------//
 
@@ -17,6 +17,8 @@ const modifierButton = document.getElementById("modifier-button")
 const filters = document.querySelector(".filters")
 const modal = document.querySelector(".modal")
 const modalWrapper = document.querySelector(".modal-wrapper")
+const loginLink = document.getElementById("login-link")
+const logoutLink = document.getElementById("logout-link")
 
 
 
@@ -25,6 +27,7 @@ const modalWrapper = document.querySelector(".modal-wrapper")
 
 function fillWorks(gallery){
 
+    galleryContainer.innerHTML=``
     for (let i=0; i<gallery.length; i++){
         let galleryElement = document.createElement("figure")
         galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}"> <figcaption>${gallery[i].title}</figcaption>`
@@ -40,7 +43,7 @@ function createFilters(){
         let filterElement = document.createElement("button")
         filterElement.setAttribute("name",categories[i].name)
         filterElement.setAttribute("type","button")
-        filterElement.classList += "bouton-filtre"
+        filterElement.classList += "filter-button"
         filterElement.textContent=categories[i].name
         filters.appendChild(filterElement)
     }
@@ -49,6 +52,8 @@ function createFilters(){
  // -----------------Génération de la modale "Supprimer travaux"---------------------//
 
 function fillDeleteModal(){
+
+    modalWrapper.innerHTML=``
 // --- Création de chaque élément ---//
     // Création des liens de navigation 
     let nav = document.createElement("nav")
@@ -68,12 +73,7 @@ function fillDeleteModal(){
     modalWrapper.appendChild(modalImageWrapper)
 
     // Ajout des images au conteneur d'images
-    const modalImage = document.querySelector(".modal-img")
-    for (let i=0; i<gallery.length; i++){
-        let galleryElement = document.createElement("div")
-        galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}" class="gallery-element"><i class="fa-solid fa-trash-can" id=${gallery[i].id}></i>`
-        modalImage.appendChild(galleryElement)
-    }
+    refreshModalImage()
 
     // Ajout du bouton Ajouter une photo
     let addButton = document.createElement("div")
@@ -81,6 +81,16 @@ function fillDeleteModal(){
     addButton.classList.add("add-button")
 
     modalWrapper.appendChild(addButton)
+}
+
+function refreshModalImage(){
+    const modalImage = document.querySelector(".modal-img")
+    modalImage.innerHTML=``
+    for (let i=0; i<gallery.length; i++){
+        let galleryElement = document.createElement("div")
+        galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}" class="gallery-element"><i class="fa-solid fa-trash-can" id=${gallery[i].id}></i>`
+        modalImage.appendChild(galleryElement)
+    }
 }
 
 function displayDeleteModal(){
@@ -113,6 +123,7 @@ function displayDeleteModal(){
         displayAddModal()
     })
 
+    
     // Supprimer un travail
     deleteButton.forEach(function(button){
         const token = "Bearer " + sessionStorage.getItem("token")
@@ -124,9 +135,25 @@ function displayDeleteModal(){
                 headers:{"authorization" : token}
             })
 
+            deleteFromGallery(deleteId)
+            fillWorks(gallery)
+            displayDeleteModal()
         })
     })
 }
+
+function deleteFromGallery(deleteId) {
+    // Parcourir le tableau pour trouver l'index de l'élément avec l'id donné
+    let id = parseInt(deleteId)
+    let index = gallery.findIndex(function(element) {
+        return element.id === id;
+    });
+    // Si l'élément est trouvé, le supprimer du tableau
+    if (index !== -1) {
+        gallery.splice(index, 1);
+    }
+}
+
 
 // -----------------Génération de la modale "Ajouter travaux"---------------------//
 
@@ -165,7 +192,7 @@ function fillAddModal(){
     // Création du Label, de l'input File et de l'indication 
     let labelFile = document.createElement("label")
     labelFile.innerHTML=`<span>+ Ajouter photo</span>`
-    labelFile.setAttribute("for","input-photo")
+    labelFile.setAttribute("for","photo-input")
 
     let inputFile = document.createElement("input")
     inputFile.setAttribute("name","image")
@@ -200,11 +227,11 @@ function fillAddModal(){
 
     let categoryLabel = document.createElement("label")
     categoryLabel.textContent="Catégorie"
-    categoryLabel.setAttribute("for","categorie-select")
+    categoryLabel.setAttribute("for","category-select")
 
     let categorySelect = document.createElement("select")
     categorySelect.setAttribute("name","category")
-    categorySelect.setAttribute("id","categorie-select")
+    categorySelect.setAttribute("id","category-select")
     categorySelect.setAttribute("required","true")
 
     let placeHolderSelect = document.createElement("option")
@@ -223,10 +250,15 @@ function fillAddModal(){
     }
 
     // --- Création du bouton Submit---//
+    let submitContainer = document.createElement("div")
+    submitContainer.classList.add("submit-container")
 
     let addSubmitButton = document.createElement("button")
     addSubmitButton.setAttribute("type","submit")
+    addSubmitButton.classList.add("add-submit-button")
     addSubmitButton.textContent="Valider"
+
+    submitContainer.appendChild(addSubmitButton)
 
     // --- Ajout de chaque élément au formulaire---//
 
@@ -235,7 +267,7 @@ function fillAddModal(){
     form.appendChild(titleInput)
     form.appendChild(categoryLabel)
     form.appendChild(categorySelect)
-    form.appendChild(addSubmitButton)
+    form.appendChild(submitContainer)
 
     // --- Remplissage de la modale---//
     modalWrapper.appendChild(nav)
@@ -246,11 +278,12 @@ function fillAddModal(){
 
 function displayAddModal(){
 
-    // ----Vider la modale---//
+    // ----Reboot la modale---//
 
     modalWrapper.innerHTML=''
 
     fillAddModal()
+    checkInputs()
 
     
     // --- Création des Listeners---//
@@ -271,10 +304,14 @@ function displayAddModal(){
     const photoInput = document.getElementById("photo-input")
     photoInput.addEventListener("change",checkFileSize)
 
+    // -----------------Listener de completion du formulaire---------------------//
+    let addForm = document.querySelector(".add-form")
+
+    addForm.addEventListener("change",checkInputs)
 
     // -----------------Listener du formulaire d'ajout de travaux---------------------//
 
-    let addForm = document.querySelector(".add-form")
+    
 
     addForm.addEventListener("submit", async function(event){
         
@@ -288,8 +325,31 @@ function displayAddModal(){
                 body:addFormData,
                 headers: {"Authorization": token}
             })
+
+            .then(response => {
+            
+                if (response.ok) {
+                    modal.setAttribute("style","display:none")
+                    return response.json()
+                }else{
+                    alert("Une erreur est survenue")
+                    throw new Error("Une erreur est survenue. Vérifiez les informations entrées et votre connexion internet.")
+                }
+            })
+
+            .then (data => {
+                const newWork = {
+                    id : data.id,
+                    title : data.title,
+                    imageUrl : data.imageUrl,
+                    categoryId : data.categoryId,
+                    userId : data.userId
+                }
+                gallery.push(newWork)
+                fillWorks(gallery)
+            })
+
         }catch (error){
-            alert("Une erreur est survenue. Vérifiez les informations entrées et votre connexion internet.")
             console.log(error)
         }
     })
@@ -301,9 +361,8 @@ function checkFileSize() {
     let selectedFile=document.getElementById("photo-input").files
 
     if (selectedFile.length > 0) {
-        var fileSize = selectedFile[0].size; 
-        console.log(fileSize)
-        var maxSizeInBytes = 4200000;
+        let fileSize = selectedFile[0].size; 
+        let maxSizeInBytes = 4200000;
 
         if (fileSize > maxSizeInBytes) {
             alert("La taille du fichier dépasse la limite autorisée.");
@@ -338,6 +397,20 @@ function updateDisplay(selectedFile) {
     }
 }
 
+function checkInputs() {
+    let inputFile= document.getElementById("photo-input")
+    let titleInput = document.getElementById("title-input")
+    let categorySelect = document.getElementById("category-select")
+    let addSubmitButton = document.querySelector(".add-submit-button")
+    console.log(addSubmitButton)
+
+    if (inputFile.value !== '' && titleInput.value.trim() !== '' && categorySelect.value.trim() !== '') {
+        addSubmitButton.removeAttribute('disabled');
+    } else {
+        addSubmitButton.setAttribute('disabled', 'disabled');
+    }
+  }
+
 // -----------------Génération de la page---------------------//
 
 fillWorks(gallery)
@@ -354,6 +427,9 @@ if (sessionStorage!==null){
 
         modifierButton.classList.remove("display-none")
         filters.classList.add("display-none")
+        logoutLink.classList.remove("display-none")
+        loginLink.classList.add("display-none")
+        
         console.log("Utilisateur connecté:", user)
 
     } else {
@@ -397,3 +473,11 @@ modifierButton.addEventListener("click", function(){
     modal.removeAttribute("style")
 })
 
+// -----------------Listener du bouton "Logout"---------------------//
+
+logoutLink.addEventListener("click", function(){
+    loginLink.classList.remove("display-none")
+    logoutLink.classList.add("display-none")
+    sessionStorage.clear()
+    location.reload()
+})

@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
 }
 ol, ul {
 	list-style: none;
@@ -56,7 +57,7 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0 100px
 }
 section {
 	margin: 50px 0
@@ -81,7 +82,8 @@ h2{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: #1D6154;
+	margin-top:100px;
 }
 
 h3{
@@ -93,11 +95,17 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
 }
+
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
+	margin-left:20px;
+}
+
+nav img {
+	width:20px;
+
 }
 
 li:hover {
@@ -125,6 +133,7 @@ input, select {
 
 label {
 	margin: 2em 0 1em 0;
+	font-weight: 500;
 }
 
 .display-none {
@@ -133,6 +142,10 @@ label {
 
 .invisible {
 	opacity:0;
+}
+
+strong {
+	font-weight:bold
 }
 
 /* ******** introduction ********** */
@@ -151,14 +164,17 @@ label {
 }
 
 #introduction article {
-	flex: 1
+	flex: 1;
 }
+
 #introduction h2 {
+	margin-top:0;
 	margin-bottom: 1em;
 }
 
 #introduction p {
 	margin-bottom: 0.5em;
+	width:80%
 }
 
 /* ******** Portfolio ********** */
@@ -166,6 +182,12 @@ label {
 #portfolio-title {
 	width:100%;
 	text-align: center;
+}
+
+#portfolio {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 #portfolio h2 {
@@ -185,7 +207,8 @@ label {
 }
 
 .gallery {
-	width: 100%;
+	margin-top:50px;
+	width: 90%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-column-gap: 20px;
@@ -207,11 +230,15 @@ label {
 .filter-button{
 	text-align:center;
 	padding:5px 20px;
-	margin:30px 15px;
+	margin:0px 5px;
 	border:1px solid #1D6154;
 	border-radius:50px;
 	background-color:white;
+
 	color:#1D6154;
+	font-size:16px;
+	font-weight: 700;
+	font-family: 'Syne'
 }
 
 .filter-button:focus {
@@ -224,13 +251,16 @@ label {
 
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
+
 }
-#contact > * {
+#contact > p {
 	text-align: center;
 
 }
 #contact h2{
+	text-align: center;
+	margin-top:50px;
 	margin-bottom: 20px;
 }
 
@@ -256,12 +286,9 @@ input[type="submit"]{
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
+	font-weight:300;
 }
-
-
-
-
 
 /* **** Modale **** */
 
@@ -287,7 +314,7 @@ footer nav ul {
 	max-height: calc(100vh - 20px);
 	background-color: white;
 	border-radius: 10px;
-	padding-bottom:45px;
+	padding-bottom:55px;
 }
 
 .modal-wrapper nav {
@@ -350,6 +377,7 @@ footer nav ul {
 	padding:10px 50px;
 	text-align: center;
 	border-radius: 60px ;
+	border:none;
 	cursor: pointer;
 }
 
@@ -363,8 +391,7 @@ footer nav ul {
 	display:flex;
 	flex-direction: column;
 	width:66%;
-	padding-bottom: 70px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+	margin:0
 }
 
 option, select {
@@ -415,5 +442,20 @@ option, select {
 	top:-15px;
 	font-size:10px;
 	font-weight: 400;
-	
 }
+
+.submit-container {
+	text-align: center;
+	border-top: 1px solid #B3B3B3;
+	margin-top:50px
+}
+
+.add-submit-button {
+	margin:0;
+	width:50%
+}
+
+.add-submit-button[disabled] {
+	background-color: #A7A7A7;
+	cursor: not-allowed;
+  }
