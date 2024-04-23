@@ -95,9 +95,6 @@ function refreshModalImage(){
 
 function displayDeleteModal(){
 
-    // Nettoyage du contenu de la modale
-    modalWrapper.innerHTML=``
-
     fillDeleteModal()
     
     // --- Ajout des Listeners ---//
@@ -284,15 +281,12 @@ function displayAddModal(){
 
     fillAddModal()
     checkInputs()
-
     
     // --- Création des Listeners---//
 
     // Retour à la modale de suppression de travaux
     const previous = document.querySelector(".fa-arrow-left")
-    previous.addEventListener("click", function(){
-        displayDeleteModal()
-    })
+    previous.addEventListener("click", displayDeleteModal)
 
     // Fermeture de la modale
     const closeModal = document.querySelector(".fa-xmark")
@@ -310,8 +304,6 @@ function displayAddModal(){
     addForm.addEventListener("change",checkInputs)
 
     // -----------------Listener du formulaire d'ajout de travaux---------------------//
-
-    
 
     addForm.addEventListener("submit", async function(event){
         

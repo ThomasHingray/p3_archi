@@ -32,7 +32,6 @@ async function connexion(identifiants){
 }
 
 // -----------------Listener du bouton "Connexion"---------------------//
-let storedData=''
 const loginForm = document.querySelector(".login")
 
 loginForm.addEventListener("submit", function(event){
