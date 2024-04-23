@@ -446,6 +446,9 @@ filtersButtonArray.forEach(function(button){
         galleryContainer.textContent=""
         let filteredCategory = button.name
 
+        filtersButtonArray.forEach((element) => element.classList.remove("active"))
+        button.classList.add("active")
+
         // Générer les travaux en fonction de leur catégorie
         if (button.name === "Tous"){
             fillWorks(gallery)
