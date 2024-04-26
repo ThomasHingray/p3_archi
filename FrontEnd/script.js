@@ -28,11 +28,22 @@ const logoutLink = document.getElementById("logout-link")
 function fillWorks(gallery){
 
     galleryContainer.innerHTML=``
-    for (let i=0; i<gallery.length; i++){
+    gallery.forEach((element) =>{
         let galleryElement = document.createElement("figure")
-        galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}"> <figcaption>${gallery[i].title}</figcaption>`
+        galleryElement.id = "figure"+element.id
+
+        let elementImage = document.createElement("img")
+        elementImage.setAttribute("src", element.imageUrl)
+        elementImage.setAttribute("alt", element.title)
+        
+        let figcaption = document.createElement("figcaption")
+        figcaption.textContent= element.title
+
+        galleryElement.appendChild(elementImage)
+        galleryElement.appendChild(figcaption)
+
         galleryContainer.appendChild(galleryElement)
-    }
+    })
 }
 
  // -----------------Génération des filtres---------------------//
@@ -86,11 +97,30 @@ function fillDeleteModal(){
 function refreshModalImage(){
     const modalImage = document.querySelector(".modal-img")
     modalImage.innerHTML=``
-    for (let i=0; i<gallery.length; i++){
+    // for (let i=0; i<gallery.length; i++){
+    //     let galleryElement = document.createElement("div")
+    //     galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}" class="gallery-element"><i class="fa-solid fa-trash-can" id=${gallery[i].id}></i>`
+    //     modalImage.appendChild(galleryElement)
+    // }
+
+    gallery.forEach((element) =>{
         let galleryElement = document.createElement("div")
-        galleryElement.innerHTML=`<img src="${gallery[i].imageUrl}" alt="${gallery[i].title}" class="gallery-element"><i class="fa-solid fa-trash-can" id=${gallery[i].id}></i>`
+        galleryElement.id = "div"+element.id
+
+        let elementImage = document.createElement("img")
+        elementImage.setAttribute("src", element.imageUrl)
+        elementImage.setAttribute("alt", element.title)
+        elementImage.classList.add("gallery-element")
+        
+        let trashImage = document.createElement("i")
+        trashImage.id = element.id
+        trashImage.classList.add("fa-solid","fa-trash-can")
+
+        galleryElement.appendChild(elementImage)
+        galleryElement.appendChild(trashImage)
+
         modalImage.appendChild(galleryElement)
-    }
+    })
 }
 
 function displayDeleteModal(){
@@ -132,9 +162,11 @@ function displayDeleteModal(){
                 headers:{"authorization" : token}
             })
 
-            deleteFromGallery(deleteId)
-            fillWorks(gallery)
-            displayDeleteModal()
+            // deleteFromGallery(deleteId)
+            // fillWorks(gallery)
+            document.getElementById("figure"+deleteId).remove()
+            document.getElementById("div"+deleteId).remove()
+            
         })
     })
 }
@@ -436,17 +468,16 @@ if (sessionStorage!==null){
 // -----------------Listener des boutons "filtre"---------------------//
 
 let filtersButton = document.querySelectorAll(".filter-button")
-let filtersButtonArray= Array.from(filtersButton)
 
 // Pour chaque filtre
-filtersButtonArray.forEach(function(button){
+filtersButton.forEach(function(button){
     button.addEventListener("click", function (){  
 
         // Nettoyer la galerie
         galleryContainer.textContent=""
         let filteredCategory = button.name
 
-        filtersButtonArray.forEach((element) => element.classList.remove("active"))
+        filtersButton.forEach((element) => element.classList.remove("active"))
         button.classList.add("active")
 
         // Générer les travaux en fonction de leur catégorie
